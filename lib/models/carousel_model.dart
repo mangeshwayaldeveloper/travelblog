@@ -8,7 +8,9 @@ List<CarouselModel> carousels =
 carouselsData.map((item) => CarouselModel(item['image']!)).toList();
 
 var carouselsData = [
-  {"image": "Images/images/carousel_flight_discount.png"},
-  {"image": "Images/images/carousel_hotel_discount.png"},
-  {"image": "Images/images/carousel_covid_discount.png"},
+  {"image": "assets/img1.jpeg"},
+  {"image": "assets/img2.jpeg"},
+  {"image": "assets/img3.jpeg"},
+  {"image": "assets/img4.jpeg"},
+  {"image": "assets/img5.jpeg"},
 ];

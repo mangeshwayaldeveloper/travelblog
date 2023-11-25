@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "998692255191",
+    "project_id": "travelvlog-cb8ca",
+    "storage_bucket": "travelvlog-cb8ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998692255191:android:e2f842f5073f012e190792",
+        "android_client_info": {
+          "package_name": "com.alwaysbecreative.travel_booking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZMSAPv8AyVGnv9FJ6BaB70Anx-l1TO-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

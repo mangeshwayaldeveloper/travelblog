@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: EdgeInsets.only(left: 16, top: 24),
               child: Text(
-                'Let\'s Booking',
+                'Let\'s Writr Blog',
                 style: mTitleStyle,
               ),
             ),
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Flight",
+                                      "Countries",
                                       style: mTitleStyle,
                                     ),
                                     Text(
@@ -186,11 +186,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Trains",
+                                      "Discover",
                                       style: mTitleStyle,
                                     ),
                                     Text(
-                                      "Inter city",
+                                      "Explore",
                                       style: mServiceSubtitleStyle,
                                     )
                                   ],
@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Hotel",
+                                      "Latest Blog",
                                       style: mTitleStyle,
                                     ),
                                     Text(
@@ -267,11 +267,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Car",
+                                      "Helpline",
                                       style: mTitleStyle,
                                     ),
                                     Text(
-                                      "Around the city",
+                                      "Support",
                                       style: mServiceSubtitleStyle,
                                     ),
                                     SizedBox(
