@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_booking/Screen/Destinations/popluarDestination.dart';
-
-import '../../../widgets/popluarDestination.dart';
+import 'package:travel_booking/Screen/Destinations/widget/flight_booking_form.dart';
 
 class FlightBooking extends StatefulWidget {
   const FlightBooking({super.key});
@@ -38,7 +37,11 @@ class _FlightBookingState extends State<FlightBooking> {
             popularDestinationFlight(),
             Container(
                 child: ElevatedButton(
-                    onPressed: () {}, child: Text("Book Flight")))
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FlightBookingForm()));
+                    },
+                    child: Text("Book Flight")))
           ],
         ),
       ),
