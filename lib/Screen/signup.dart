@@ -53,129 +53,132 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: SafeArea(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "Images/svg/logo.svg",
-                  height: 50,
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(),
-                    ),
-                    child: TextFormField(
-                      controller: username,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        hintText: "Enter Your Name",
-                        border: InputBorder.none,
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: SafeArea(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // SvgPicture.asset(
+                  //   "Images/svg/logo.svg",
+                  //   height: 50,
+                  // ),
+                  Image.asset("assets/traveller.jpg"),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(),
+                      ),
+                      child: TextFormField(
+                        controller: username,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                          hintText: "Enter Your Name",
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextFormField(
-                      controller: email,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email),
-                        hintText: "Enter Email",
-                        border: InputBorder.none,
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: TextFormField(
+                        controller: email,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email),
+                          hintText: "Enter Email",
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(),
-                    ),
-                    child: TextFormField(
-                      controller: password,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock),
-                        border: InputBorder.none,
-                        hintText: "Enter Password",
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(),
                       ),
-                      obscureText: true,
+                      child: TextFormField(
+                        controller: password,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock),
+                          border: InputBorder.none,
+                          hintText: "Enter Password",
+                        ),
+                        obscureText: true,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width / 3,
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(20),
+                  SizedBox(
+                    height: 30,
                   ),
-                  child: TextButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          _isLoading = true;
-                        });
-
-                        // Get values from the form
-                        String enteredEmail = email.text.trim();
-                        String enteredPassword = password.text.trim();
-                        String enteredUsername = username.text.trim();
-
-                        try {
-                          // Sign up the user with email and password
-                          UserCredential? userCredential =
-                              await signUpWithEmailAndPassword(
-                            enteredEmail,
-                            enteredPassword,
-                            enteredUsername,
-                          );
-
-                          if (userCredential != null) {
-                            // Navigate to the login screen after successful signup
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => Login()),
-                            );
-                          }
-                        } finally {
+                  Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width / 3,
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: TextButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
                           setState(() {
-                            _isLoading = false;
+                            _isLoading = true;
                           });
+
+                          // Get values from the form
+                          String enteredEmail = email.text.trim();
+                          String enteredPassword = password.text.trim();
+                          String enteredUsername = username.text.trim();
+
+                          try {
+                            // Sign up the user with email and password
+                            UserCredential? userCredential =
+                                await signUpWithEmailAndPassword(
+                              enteredEmail,
+                              enteredPassword,
+                              enteredUsername,
+                            );
+
+                            if (userCredential != null) {
+                              // Navigate to the login screen after successful signup
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => Login()),
+                              );
+                            }
+                          } finally {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
                         }
-                      }
-                    },
-                    child: _isLoading
-                        ? CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
-                        : Text(
-                            "Sign Up",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                      },
+                      child: _isLoading
+                          ? CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : Text(
+                              "Sign Up",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

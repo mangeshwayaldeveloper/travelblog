@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
+import 'package:travel_booking/Screen/Home/booking/flight.dart';
 import 'package:travel_booking/constants/color_constant.dart';
 import 'package:travel_booking/constants/style.dart';
 import 'package:travel_booking/models/carousel_model.dart';
@@ -30,13 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark),
-        backgroundColor: mBackgroundColor,
-        title: SvgPicture.asset("Images/svg/logo.svg"),
-        elevation: 0,
-      ),
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark),
+          backgroundColor: mBackgroundColor,
+          title: Text(
+            "Traveller",
+            style: TextStyle(color: Colors.black),
+          )
+          // Image.asset("assets/traveller.jpg"),
+          // SvgPicture.asset("Images/svg/logo.svg"),
+          // elevation: 0,
+          ),
       backgroundColor: mBackgroundColor,
       bottomNavigationBar: BottomNavigationTravel(),
       body: Container(
@@ -47,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: EdgeInsets.only(left: 16, bottom: 24),
               child: Text(
-                'Hi, Rohan Welcome',
+                'Hi, Shubham Welcome',
                 style: mTitleStyle,
               ),
             ),
@@ -112,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: EdgeInsets.only(left: 16, top: 24),
               child: Text(
-                'Let\'s Writr Blog',
+                'Let\'s Book',
                 style: mTitleStyle,
               ),
             ),
@@ -120,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 20,
             ),
             Container(
-              height: 144,
+              height: 184,
               margin: EdgeInsets.only(left: 16, right: 16),
               child: Column(
                 children: <Widget>[
@@ -130,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           margin: EdgeInsets.only(right: 8),
                           padding: EdgeInsets.only(left: 16),
-                          height: 64,
+                          height: 70,
                           decoration: BoxDecoration(
                               color: mFillColor,
                               borderRadius: BorderRadius.circular(12),
@@ -143,19 +149,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fit: BoxFit.contain,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: 16),
+                                padding: EdgeInsets.only(left: 10),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Countries",
-                                      style: mTitleStyle,
-                                    ),
-                                    Text(
-                                      "Feel Freedom",
-                                      style: mServiceSubtitleStyle,
-                                    )
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FlightBooking()));
+                                        },
+                                        child: Text(
+                                          "Flight Booking",
+                                          style: TextStyle(fontSize: 14,color: Colors.black),
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
                                   ],
                                 ),
                               )
@@ -167,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           margin: EdgeInsets.only(right: 8),
                           padding: EdgeInsets.only(left: 16),
-                          height: 64,
+                          height: 70,
                           decoration: BoxDecoration(
                               color: mFillColor,
                               borderRadius: BorderRadius.circular(12),
@@ -185,14 +195,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Discover",
-                                      style: mTitleStyle,
+                                    TextButton(
+                                      onPressed: (){},
+                                      child: Text(
+                                        "Train",
+                                        style: mTitleStyle,
+                                      ),
                                     ),
-                                    Text(
-                                      "Explore",
-                                      style: mServiceSubtitleStyle,
-                                    )
+
                                   ],
                                 ),
                               )
@@ -229,14 +239,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Latest Blog",
-                                      style: mTitleStyle,
+                                    TextButton(
+                                      onPressed: () {  },
+                                      child: Text(
+                                        "Hotel",
+                                        style: mTitleStyle,
+                                      ),
                                     ),
-                                    Text(
-                                      "Let's Take A Break",
-                                      style: mServiceSubtitleStyle,
-                                    )
+                                    // Text(
+                                    //   "Let's Take A Break",
+                                    //   style: mServiceSubtitleStyle,
+                                    // )
                                   ],
                                 ),
                               )
@@ -266,17 +279,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Helpline",
-                                      style: mTitleStyle,
+                                    TextButton(
+                                      onPressed: () {  },
+                                      child: Text(
+                                        "Car",
+                                        style: mTitleStyle,
+                                      ),
                                     ),
-                                    Text(
-                                      "Support",
-                                      style: mServiceSubtitleStyle,
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
+                                    // Text(
+                                    //   "Support",
+                                    //   style: mServiceSubtitleStyle,
+                                    // ),
+                                    // SizedBox(
+                                    //   height: 20,
+                                    // ),
                                     // popular destination section
                                   ],
                                 ),
