@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:travel_booking/Screen/MyOrders.dart';
+import 'package:travel_booking/Screen/blogs.dart';
+import 'package:travel_booking/Screen/home.dart';
+import 'package:travel_booking/Screen/profile.dart';
 import 'package:travel_booking/constants/color_constant.dart';
 
 class BottomNavigationTravel extends StatefulWidget {
@@ -12,15 +16,43 @@ class BottomNavigationTravel extends StatefulWidget {
 
 class _BottomNavigationTravelState extends State<BottomNavigationTravel> {
   int _selectedIndex = 0;
+
+  List<Widget>_screens=[
+    HomeScreen(),
+    MyOrders(),
+    Blogs(),
+    Profile()
+  ];
   var bottomtextStyle =
       GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500);
 
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      switch (index) {
+        case 0:
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+          break;
+        case 1:
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => MyOrders()));
+          break;
+        case 2:
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => Blogs()));
+          break;
+        case 3:
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => Profile()));
+      }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
