@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 class BookingData {
   String name;
   String phone;
@@ -42,3 +44,7 @@ class BookingData {
     return data;
   }
 }
+
+final formProvider = StateProvider<List<BookingData>>((ref) {
+  return [];
+});

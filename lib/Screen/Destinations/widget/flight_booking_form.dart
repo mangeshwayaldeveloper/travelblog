@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_booking/provider/bookingFormProvider.dart';
 
-class FlightBookingForm extends StatefulWidget {
+class FlightBookingForm extends ConsumerStatefulWidget {
   const FlightBookingForm({Key? key}) : super(key: key);
 
   @override
-  State<FlightBookingForm> createState() => _FlightBookingFormState();
+  ConsumerState<FlightBookingForm> createState() => _FlightBookingFormState();
 }
 
-class _FlightBookingFormState extends State<FlightBookingForm> {
+class _FlightBookingFormState extends ConsumerState<FlightBookingForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -16,6 +18,7 @@ class _FlightBookingFormState extends State<FlightBookingForm> {
   TextEditingController pickUp = TextEditingController();
   TextEditingController destination = TextEditingController();
   TextEditingController time = TextEditingController();
+
 
 
   @override
@@ -162,6 +165,16 @@ class _FlightBookingFormState extends State<FlightBookingForm> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
+                                final formData = BookingData(
+                                  name: name.text,
+                                  phone: phone.text,
+                                  email: email.text,
+                                  date: date.text,
+                                  pickUp: pickUp.text,
+                                  destination: destination.text,
+                                  time: time.text,
+                                );
+                                ref.watch(formProvider).add(formData);
                                 print("booked");
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
