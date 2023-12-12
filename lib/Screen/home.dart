@@ -10,6 +10,7 @@ import 'package:travel_booking/models/travlog_model.dart';
 import 'package:travel_booking/widgets/bottom_navigation_travelkuy.dart';
 
 import '../models/popular_destination_model.dart';
+import '../widgets/popluarDestination.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -313,45 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: mTitleStyle,
               ),
             ),
-            Container(
-              height: 140,
-              child: ListView.builder(
-                itemCount: populars.length,
-                padding: EdgeInsets.only(left: 16, right: 16),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Container(
-                      height: 140,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: mBorderColor, width: 1),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset(
-                            populars[index].image,
-                            height: 74,
-                          ),
-                          Text(
-                            populars[index].name,
-                            style: mPopluarDestinationTitleStyle,
-                          ),
-                          Text(populars[index].country,
-                              style: mPopularDestinationSubtitleStyle)
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                // itemCount: populars.length,
-              ),
-            ),
+            popularDestination(),
             Padding(
               padding: EdgeInsets.only(left: 16, top: 24, bottom: 12),
               child: Text(
@@ -432,3 +395,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+
