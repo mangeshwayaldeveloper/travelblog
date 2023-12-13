@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       FlightBooking()));
                                         },
                                         child: Text(
-                                          "Flight Booking",
+                                          "Flight",
                                           style: TextStyle(fontSize: 14,color: Colors.black),
                                           overflow: TextOverflow.ellipsis,
                                         )),
