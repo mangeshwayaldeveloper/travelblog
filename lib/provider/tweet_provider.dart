@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:travel_booking/provider/user_provider.dart';
 
-import '../models/tweet.dart';
+import '../Models/tweet.dart';
 
 final feedProvider = StreamProvider.autoDispose<List<Tweet>>((ref) {
   return FirebaseFirestore.instance

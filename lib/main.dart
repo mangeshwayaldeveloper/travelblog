@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Travel App",
-      routes: {"/": (context) => HomeScreen()},
+      routes: {"/": (context) => Login()},
     );
   }
 }

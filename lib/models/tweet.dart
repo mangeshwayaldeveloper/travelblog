@@ -81,6 +81,5 @@ class Tweet {
       postTime: map['postTime'],
     );
   }
-
 //</editor-fold>
 }

@@ -4,8 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:travel_booking/Screen/MyOrders.dart';
 import 'package:travel_booking/Screen/blogs.dart';
 import 'package:travel_booking/Screen/home.dart';
-import 'package:travel_booking/Screen/profile.dart';
 import 'package:travel_booking/constants/color_constant.dart';
+
+import '../Screen/Profile.dart';
 
 class BottomNavigationTravel extends StatefulWidget {
   const BottomNavigationTravel({super.key});
