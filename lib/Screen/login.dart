@@ -1,153 +1,126 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:travel_booking/Screen/home.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel_booking/Screen/signup.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+import '../provider/user_provider.dart';
+
+class SignIn extends ConsumerStatefulWidget {
+  const SignIn({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  ConsumerState<SignIn> createState() => _MyHomePageState();
 }
 
-class _LoginState extends State<Login> {
-  double HeadingText = 28;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+class _MyHomePageState extends ConsumerState<SignIn> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> signInWithEmailAndPassword(
-      String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(email: userNameController.text, password: passwordController.text);
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'An unknown error occurred';
+  // final FirebaseFirestore _firestore=FirebaseFirestore.instance;
 
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Wrong password provided.';
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  GlobalKey<FormState> _signKey = GlobalKey();
+  final RegExp emailValid = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: SafeArea(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    // child: SvgPicture.asset(
-                    //   "Images/svg/logo.svg",
-                    //   height: 50,
-                    // ),
-                    child: Image.asset("assets/traveller.jpg"),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _signKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+            Image.asset("assets/traveller.jpg"),
+                SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  "Login To Traveller",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(15),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                        hintText: "Enter an Email",
+                        border: InputBorder.none,
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Email";
+                      } else if (!emailValid.hasMatch(value)) {
+                        return "Please enter valid email";
+                      }
+                      return null;
+                    },
                   ),
-                  SizedBox(
-                    height: 50,
+                ),
+                Container(
+                  margin: EdgeInsets.all(15),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                        hintText: "Enter a password",
+                        border: InputBorder.none,
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Password";
+                      } else if (value.length < 6) {
+                        return "Password Should Be Minimum 6 Character Long";
+                      } else if (value.length > 20) {
+                        return "Password Should Not Be Greater Than 20";
+                      }
+                      return null;
+                    },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: TextFormField(
-                        controller: userNameController,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.person),
-                            hintText: "Enter Number",
-                            border: InputBorder.none),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please Enter Username";
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextFormField(
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.password),
-                          hintText: "Enter Password",
-                          border: InputBorder.none,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Password Cannot Be Empty";
-                          }
-                        },
-                        obscureText: true,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    height: 50,
-                    width: MediaQuery.sizeOf(context).width / 3,
+                ),
+                Container(
+                    width: 250,
                     decoration: BoxDecoration(
-                        color: Colors.blueAccent,
-                        borderRadius: BorderRadius.circular(20)),
+                        color: Colors.blue, borderRadius: BorderRadius.circular(30)),
                     child: TextButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          String email = userNameController.text.trim();
-                          String password = passwordController.text.trim();
-                          signInWithEmailAndPassword(email, password);
-                        }
-                      },
-                      child: Text(
-                        "Login",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                      onPressed: () async {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => SignUp()));
-                      },
-                      child: Text(
-                        "Do not have an account? Sign Up",
-                        style: TextStyle(color: Colors.blueAccent),
-                      ))
-                ],
-              ),
+                        onPressed: () async {
+                          if (_signKey.currentState!.validate()) {
+                            try {
+                              await _auth.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+                              ref.read(userProvider.notifier).login(_emailController.text);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())));
+                            }
+                          }
+                        },
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ))),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const SignUpPage()));
+                    },
+                    child: Text("Don't have an account? Sign up here")),
+              ],
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,56 +23,72 @@ class _SettingsState extends ConsumerState<Profile> {
     _nameController.text = currentUser.user.name;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Setting"),
+        title: Text("Profile"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () async {
-                final ImagePicker picker = ImagePicker();
-                // Pick an image.
-                final XFile? pickedImage = await picker.pickImage(
-                    source: ImageSource.gallery, requestFullMetadata: false);
-                if (pickedImage != null) {
-                  ref
-                      .read(userProvider.notifier)
-                      .updateImage(File(pickedImage.path));
-                }
-              },
-              child: Container(
-                height: 250,
-                width: 250,
-                child: CircleAvatar(
-                  foregroundImage: NetworkImage(
-                    currentUser.user.profilePic,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  final ImagePicker picker = ImagePicker();
+                  // Pick an image.
+                  final XFile? pickedImage = await picker.pickImage(
+                      source: ImageSource.gallery, requestFullMetadata: false);
+                  if (pickedImage != null) {
+                    ref
+                        .read(userProvider.notifier)
+                        .updateImage(File(pickedImage.path));
+                  }
+                },
+                child: Container(
+                  height: 250,
+                  width: 250,
+                  child: CircleAvatar(
+                    foregroundImage: NetworkImage(
+                      currentUser.user.profilePic,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Center(
-              child: Text("Tap To Change The Image"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: TextFormField(
-                decoration: InputDecoration(labelText: "Enter Your Name"),
-                controller: _nameController,
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            TextButton(
-                onPressed: () {
-                  ref
-                      .read(userProvider.notifier)
-                      .updateName(_nameController.text);
-                },
-                child: Text("Update"))
-          ],
+              const Center(
+                child: Text("Tap To Change The Image"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextFormField(
+                  decoration: InputDecoration(labelText: "Enter Your Name"),
+                  controller: _nameController,
+                ),
+              ),
+              TextButton(
+                  onPressed: () {
+                    ref
+                        .read(userProvider.notifier)
+                        .updateName(_nameController.text);
+                  },
+                  child: Text("Update")),
+              SizedBox(height: 60,),
+              Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(FirebaseAuth.instance.signOut());
+                      ref.read(userProvider.notifier).logout();
+                    },
+                    child: Text(
+                      "Logout",
+                      style: TextStyle(fontSize: 18),
+                    )),
+              ),
+            ],
+          ),
         ),
       ),
     );

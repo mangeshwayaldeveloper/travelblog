@@ -1,194 +1,127 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:travel_booking/Screen/login.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+import '../provider/user_provider.dart';
+
+class SignUpPage extends ConsumerStatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  ConsumerState<SignUpPage> createState() => SignUpPageState();
 }
 
-class _SignUpState extends State<SignUp> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController username = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  bool _isLoading = false;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<UserCredential?> signUpWithEmailAndPassword(
-      String email, String password, String userName) async {
-    try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      // Store additional user information in Firestore
-      await storeUserNameInFirestore(userName);
-
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      } else {
-        print('An unknown error has occurred: $e');
-      }
-    } catch (e) {
-      print('An unknown error has occurred: $e');
-    }
-    return null;
-  }
-
-  Future<void> storeUserNameInFirestore(String userName) async {
-    final User user = _auth.currentUser!;
-    final uid = user.uid;
-    await _firestore.collection('users').doc(uid).set({
-      'userName': userName,
-    });
-  }
+class SignUpPageState extends ConsumerState<SignUpPage> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  GlobalKey<FormState> _signKey = GlobalKey();
+  final RegExp emailValid = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: SafeArea(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // SvgPicture.asset(
-                  //   "Images/svg/logo.svg",
-                  //   height: 50,
-                  // ),
-                  Image.asset("assets/traveller.jpg"),
-                  SizedBox(
-                    height: 50,
+        body: SingleChildScrollView(
+          child: Form(
+            key: _signKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset("assets/traveller.jpg"),
+                SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  "Signup To Traveller",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(15),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                        hintText: "Enter an Email",
+                        border: InputBorder.none,
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Email";
+                      } else if (!emailValid.hasMatch(value)) {
+                        return "Please enter valid email";
+                      }
+                      return null;
+                    },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(),
-                      ),
-                      child: TextFormField(
-                        controller: username,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.person),
-                          hintText: "Enter Your Name",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(15),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(30)),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                        hintText: "Enter a password",
+                        border: InputBorder.none,
+                        contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 20)),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please Enter Password";
+                      } else if (value.length < 6) {
+                        return "Password Should Be Minimum 6 Character Long";
+                      } else if (value.length > 20) {
+                        return "Password Should Not Be Greater Than 20";
+                      }
+                      return null;
+                    },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: TextFormField(
-                        controller: email,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.email),
-                          hintText: "Enter Email",
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(),
-                      ),
-                      child: TextFormField(
-                        controller: password,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.lock),
-                          border: InputBorder.none,
-                          hintText: "Enter Password",
-                        ),
-                        obscureText: true,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width / 3,
+                ),
+                Container(
+                    width: 250,
                     decoration: BoxDecoration(
-                      color: Colors.blueAccent,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                        color: Colors.blue, borderRadius: BorderRadius.circular(30)),
                     child: TextButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            _isLoading = true;
-                          });
-
-                          // Get values from the form
-                          String enteredEmail = email.text.trim();
-                          String enteredPassword = password.text.trim();
-                          String enteredUsername = username.text.trim();
-
-                          try {
-                            // Sign up the user with email and password
-                            UserCredential? userCredential =
-                                await signUpWithEmailAndPassword(
-                              enteredEmail,
-                              enteredPassword,
-                              enteredUsername,
-                            );
-
-                            if (userCredential != null) {
-                              // Navigate to the login screen after successful signup
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => Login()),
-                              );
+                        onPressed: () async {
+                          if (_signKey.currentState!.validate()) {
+                            try {
+                              await _auth.createUserWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text);
+                              ref
+                                  .read(userProvider.notifier)
+                                  .signUp(_emailController.text);
+                              if (!mounted) return;
+                              Navigator.of(context).pop();
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())));
                             }
-                          } finally {
-                            setState(() {
-                              _isLoading = false;
-                            });
                           }
-                        }
-                      },
-                      child: _isLoading
-                          ? CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : Text(
-                              "Sign Up",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                    ),
-                  ),
-                ],
-              ),
+                        },
+                        child: const Text(
+                          "Signup",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ))),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("already have an account? Sign up here")),
+              ],
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: TextButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: Text("Have an Account? Login"),
-      ),
-    );
+        ));
   }
 }
