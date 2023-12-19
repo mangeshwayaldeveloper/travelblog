@@ -7,7 +7,7 @@ class BookingData {
   String date;
   String pickUp;
   String destination;
-  String time;
+  String SelectedInTime;
 
   BookingData({
     required this.name,
@@ -16,7 +16,7 @@ class BookingData {
     required this.date,
     required this.pickUp,
     required this.destination,
-    required this.time,
+    required this.SelectedInTime,
   });
 
   factory BookingData.fromJson(Map<String, dynamic> json) {
@@ -27,7 +27,7 @@ class BookingData {
       date: json['date'],
       pickUp: json['pickUp'],
       destination: json['destination'],
-      time: json['time'],
+      SelectedInTime: json['time'],
     );
   }
 
@@ -39,7 +39,7 @@ class BookingData {
       'date': date,
       'pickUp': pickUp,
       'destination': destination,
-      'time': time,
+      'Selectedtime':SelectedInTime,
     };
     return data;
   }

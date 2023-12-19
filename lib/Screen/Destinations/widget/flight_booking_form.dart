@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:travel_booking/provider/bookingFormProvider.dart';
 
 class FlightBookingForm extends ConsumerStatefulWidget {
@@ -14,12 +16,29 @@ class _FlightBookingFormState extends ConsumerState<FlightBookingForm> {
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
-  TextEditingController date = TextEditingController();
   TextEditingController pickUp = TextEditingController();
   TextEditingController destination = TextEditingController();
   TextEditingController time = TextEditingController();
+  TextEditingController inputDate = TextEditingController();
+  TextEditingController SelectedInTime = TextEditingController();
+  TextEditingController FromDate = TextEditingController();
+  TimeOfDay CurrentTime = TimeOfDay.now();
+  String? SelectPickup = "Pune"; // Set an initial value
+  List pickupPoints = [
+    "Pune",
+    "Mumbai",
+    "Delhi",
+    "Bangalore",
+    "Chennai",
+    "Hyderabad"
+  ];
+  DateTime today = DateTime.now();
 
-
+  @override
+  void initState() {
+    super.initState();
+    inputDate.text = DateFormat("dd-MM-yyyy").format(today);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,30 +116,63 @@ class _FlightBookingFormState extends ConsumerState<FlightBookingForm> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: TextFormField(
-                            controller: date,
+                            controller: FromDate,
+                            // Use ApplicationDate controller here
                             decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.calendar_month_outlined),
-                                hintText: "Enter Date"),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Date is required';
+                              hintText: "Select Date",
+                              prefixIcon: Icon(
+                                Icons.calendar_today,
+                                color: Colors.brown,
+                              ),
+                            ),
+                            onTap: () async {
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
+                              DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: today,
+                                firstDate: DateTime.utc(2023),
+                                currentDate: today,
+                                lastDate: today.add(Duration(days: 30 * 6)),
+                              );
+                              if (pickedDate != null) {
+                                String formattedDate =
+                                    DateFormat("dd-MM-yyyy").format(pickedDate);
+                                setState(() {
+                                  FromDate.text =
+                                      formattedDate; // Update ApplicationDate controller
+                                });
                               }
-                              return null;
                             },
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: pickUp,
+                          child: DropdownButtonFormField(
                             decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.location_on_outlined),
-                                hintText: "PickUp Point"),
+                              prefixIcon: Icon(
+                                Icons.list,
+                                color: Colors.orange,
+                              ),
+                              hintText: "--Select--",
+                            ),
+                            value: SelectPickup,
+                            onChanged: (newValue) {
+                              setState(() {
+                                SelectPickup = newValue as String;
+                              });
+                            },
+                            items: pickupPoints.map((valueItem) {
+                              return DropdownMenuItem(
+                                value: valueItem,
+                                child: Text(valueItem),
+                              );
+                            }).toList(),
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'PickUp Point is required';
+                              if (value == null) {
+                                return 'Destination is required';
                               }
                               return null;
                             },
@@ -144,17 +196,32 @@ class _FlightBookingFormState extends ConsumerState<FlightBookingForm> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
-                            controller: time,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.watch),
-                                hintText: "Time"),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Time is required';
-                              }
-                              return null;
-                            },
-                          ),
+                              controller: SelectedInTime,
+                              decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.watch,
+                                    color: Colors.green,
+                                  ),
+                                  hintText: "In Time"),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Destination is required';
+                                }
+                                return null;
+                              },
+                              onTap: () async {
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
+                                final TimeOfDay? picked = await showTimePicker(
+                                    context: context, initialTime: CurrentTime);
+                                if (picked != null && picked != CurrentTime) {
+                                  setState(() {
+                                    CurrentTime = picked;
+                                    SelectedInTime.text =
+                                        picked.format(context);
+                                  });
+                                }
+                              }),
                         ),
                         SizedBox(
                           height: 15,
@@ -163,17 +230,18 @@ class _FlightBookingFormState extends ConsumerState<FlightBookingForm> {
                           height: 50,
                           width: MediaQuery.of(context).size.width / 2,
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 final formData = BookingData(
                                   name: name.text,
                                   phone: phone.text,
                                   email: email.text,
-                                  date: date.text,
-                                  pickUp: pickUp.text,
+                                  pickUp: SelectPickup!,
                                   destination: destination.text,
-                                  time: time.text,
+                                  SelectedInTime: SelectedInTime.text,
+                                  date: FromDate.text,
                                 );
+                                await uploadFormData(formData);
                                 ref.watch(formProvider).add(formData);
                                 print("booked");
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -185,10 +253,10 @@ class _FlightBookingFormState extends ConsumerState<FlightBookingForm> {
                                 name.clear();
                                 phone.clear();
                                 email.clear();
-                                date.clear();
-                                pickUp.clear();
+                                FromDate.clear();
+                                pickupPoints.clear();
                                 destination.clear();
-                                time.clear();
+                                SelectedInTime.clear();
                               }
                             },
                             child: Text("Book"),
@@ -204,5 +272,24 @@ class _FlightBookingFormState extends ConsumerState<FlightBookingForm> {
         ),
       ),
     );
+  }
+}
+
+Future<void> uploadFormData(BookingData formData) async {
+  try {
+    await FirebaseFirestore.instance.collection('bookings').add({
+      'name': formData.name,
+      'phone': formData.phone,
+      'email': formData.email,
+      'date': formData.date,
+      'pickUp': formData.pickUp, // Use correct field name
+      'destination': formData.destination,
+      'time': formData.SelectedInTime,
+      'category':"Flight"
+    });
+
+    // You can add additional logic or error handling here if needed.
+  } catch (e) {
+    print('Error uploading form data: $e');
   }
 }

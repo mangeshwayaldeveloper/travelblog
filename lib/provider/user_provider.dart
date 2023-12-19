@@ -30,9 +30,9 @@ class LocalUser {
 class UserNotifier extends StateNotifier<LocalUser> {
   UserNotifier()
       : super(const LocalUser(
-            id: "error",
-            user: FirebaseUser(
-                email: "error", name: "error", profilePic: "error")));
+      id: "error",
+      user: FirebaseUser(
+          email: "error", name: "error", profilePic: "error")));
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
@@ -58,9 +58,9 @@ class UserNotifier extends StateNotifier<LocalUser> {
   Future<void> signUp(String email) async {
     DocumentReference response = await _firestore.collection("users").add(
         FirebaseUser(
-                email: email,
-                name: "No Name",
-                profilePic: "http://www.gravatar.com/avatar/?d=mp")
+            email: email,
+            name: "No Name",
+            profilePic: "http://www.gravatar.com/avatar/?d=mp")
             .toMap());
     DocumentSnapshot snapshot = await response.get();
     state = LocalUser(

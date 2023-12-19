@@ -38,8 +38,7 @@ class _BlogsState extends ConsumerState<Blogs> {
               child: TextField(
                 maxLines: 4,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
-                controller: _tweetController,
-                maxLength: 280,
+                controller: _tweetController
               ),
             ),
             TextButton(

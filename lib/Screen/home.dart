@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper_plus/flutter_swiper_plus.dart';
-import 'package:travel_booking/Screen/Home/booking/flight.dart';
+import 'package:travel_booking/Screen/Destinations/widget/flight_booking_form.dart';
+import 'package:travel_booking/Screen/Home/booking/hotel.dart';
+import 'package:travel_booking/Screen/Home/booking/train.dart';
 import 'package:travel_booking/constants/color_constant.dart';
 import 'package:travel_booking/constants/style.dart';
 import 'package:travel_booking/models/carousel_model.dart';
 import 'package:travel_booking/models/travlog_model.dart';
 import 'package:travel_booking/widgets/bottom_navigation_travelkuy.dart';
 
-import '../models/popular_destination_model.dart';
 import '../widgets/popluarDestination.dart';
+import 'Home/booking/car.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: EdgeInsets.only(left: 16, bottom: 24),
               child: Text(
-                'Hi, Shubham Welcome',
+                'Hi,Traveller Welcome',
                 style: mTitleStyle,
               ),
             ),
@@ -160,11 +162,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      FlightBooking()));
+                                                      FlightBookingForm()));
                                         },
                                         child: Text(
                                           "Flight",
-                                          style: TextStyle(fontSize: 14,color: Colors.black),
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black),
                                           overflow: TextOverflow.ellipsis,
                                         )),
                                   ],
@@ -197,13 +201,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     TextButton(
-                                      onPressed: (){},
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) => Train()));
+                                      },
                                       child: Text(
                                         "Train",
                                         style: mTitleStyle,
                                       ),
                                     ),
-
                                   ],
                                 ),
                               )
@@ -241,7 +248,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     TextButton(
-                                      onPressed: () {  },
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) => Hotel()));
+                                      },
                                       child: Text(
                                         "Hotel",
                                         style: mTitleStyle,
@@ -281,7 +292,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     TextButton(
-                                      onPressed: () {  },
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) => Car()));
+                                      },
                                       child: Text(
                                         "Car",
                                         style: mTitleStyle,
@@ -395,5 +410,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
